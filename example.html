@@ -1,107 +1,119 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <title>area-city-multi</title>
-    <link rel="stylesheet" type="text/css" href="http://unpkg.com/iview/dist/styles/iview.css">
-    <script type="text/javascript" src="http://vuejs.org/js/vue.min.js"></script>
-    <script type="text/javascript" src="http://unpkg.com/iview/dist/iview.min.js"></script>
-    <script type="text/javascript" src="https://unpkg.com/http-vue-loader"></script>
-    <script type="text/javascript" src="components/area/area-source.json"></script>
-    <script type="text/javascript" src="components/area/area-producer.js"></script>
-    <style type="text/css">
-      body {background:#f0f2f5}
-      .result-pannel {
-        margin-top:20px;
-        padding:20px;
-        background:#fff;
-      }
-      .title{
-        margin-bottom:20px;
-      }
-      .index-wrapper, .name-wrapper{
-        display: flex;
-      }
-      .label {
-        flex:80px 0 0;
-      }
-      .name-wrapper{
-        margin-top:20px;
-      }
-    </style>
-  </head>
-  <body>
-    <div id="app" style="margin: 20px;">
-      <i-button type="info" @click="add">新增配送区域</i-button>
-      <div class="result-pannel">
-          <h2 class="title">选择结果</h2>
-          <div class="index-wrapper">
-            <span class="label">下标结果：</span>
-            <p class="result">{{areaIndexArr}}</p>
-          </div>
-          <div class="name-wrapper">
-            <span class="label">名称结果：</span>
-            <p class="result">{{areaNameArr}}</p>
-          </div>
-          <div class="name-wrapper">
-              <span class="label">地区结果：</span>
-              <p class="result">{{namestr}}</p>
-          </div>
+
+<head>
+  <meta charset="utf-8">
+  <title>area-city-multi</title>
+  <link rel="stylesheet" type="text/css" href="http://unpkg.com/iview/dist/styles/iview.css">
+  <script type="text/javascript" src="http://vuejs.org/js/vue.min.js"></script>
+  <script type="text/javascript" src="http://unpkg.com/iview/dist/iview.min.js"></script>
+  <script type="text/javascript" src="https://unpkg.com/http-vue-loader"></script>
+  <script type="text/javascript" src="components/area/area-source.json"></script>
+  <script type="text/javascript" src="components/area/area-producer.js"></script>
+  <style type="text/css">
+    body {
+      background: #f0f2f5
+    }
+
+    .result-pannel {
+      margin-top: 20px;
+      padding: 20px;
+      background: #fff;
+    }
+
+    .title {
+      margin-bottom: 20px;
+    }
+
+    .index-wrapper,
+    .name-wrapper {
+      display: flex;
+    }
+
+    .label {
+      flex: 80px 0 0;
+    }
+
+    .name-wrapper {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app" style="margin: 20px;">
+    <i-button type="info" @click="add">新增配送区域</i-button>
+    <div class="result-pannel">
+      <h2 class="title">选择结果</h2>
+      <div class="index-wrapper">
+        <span class="label">下标结果：</span>
+        <p class="result">{{areaIndexArr}}</p>
       </div>
-      <Modal v-model="isShowAreaModel" width="680" title="选择区域" :mask-closable="false" :scrollable="false" @on-ok="addcity">
-        <div class="area-wrapper">
-          <area-city-multi @showareadata="receive" :areadata="areaIndexArr"></area-city-multi>
-        </div>
-      </Modal>
+      <div class="name-wrapper">
+        <span class="label">名称结果：</span>
+        <p class="result">{{areaNameArr}}</p>
+      </div>
+      <div class="name-wrapper">
+        <span class="label">地区结果：</span>
+        <p class="result">{{namestr}}</p>
+      </div>
     </div>
-    <script>
+    <Modal v-model="isShowAreaModel" width="680" title="选择区域" :mask-closable="false" :scrollable="false"
+      @on-ok="addcity">
+      <div class="area-wrapper">
+        <area-city-multi @showareadata="receive" :areadata="areaIndexArr"></area-city-multi>
+      </div>
+    </Modal>
+  </div>
+  <script>
     var vmu = new Vue({
-		    el: '#app',
-		    components: {
-		          'area-city-multi': httpVueLoader('components/area/area.vue')
+      el: '#app',
+      components: {
+        'area-city-multi': httpVueLoader('components/area/area.vue')
+      },
+      data: {
+        isShowAreaModel: false,
+        namestr: '',
+        areaIndexArr: [],
+        areaNameArr: []
+      },
+      methods: {
+        add: function () {
+          this.areaIndexArr = [];
+          this.isShowAreaModel = !this.isShowAreaModel;
         },
-        data:{
-          isShowAreaModel: false,
-          namestr:'',
-		    	areaIndexArr: [],
-		      areaNameArr: []
+        addcity: function () {
+          let cityArr = get2LevelArea();
+          let idxArr = vmu.areaIndexArr;
+          let addname = [];
+          for (let j in cityArr) {
+            let curValue = cityArr[j].value + '';
+            if (idxArr.indexOf(curValue) < 0) {//选择了子节点
+              cityArr[j].checkAll = false;
+              for (let k in cityArr[j].children) {
+                let curChildValue = cityArr[j].children[k].value + '';
+                if (idxArr.indexOf(curChildValue) >= 0 && !cityArr[j].checkAll) {
+                  addname.push(cityArr[j].children[k].label);
+                }
+              }
+            } else {//选择了父节点
+              cityArr[j].checkAll = true;
+              if (cityArr[j].children.length == 1) {
+                addname.push(cityArr[j].children[0].label);
+              } else {
+                addname.push(cityArr[j].label);
+              }
+            }
+          }
+          this.namestr = addname.join(",");
         },
-        methods: {
-          add: function () {
-		    		this.areaIndexArr=[];
-		    		this.isShowAreaModel = !this.isShowAreaModel;
-          },
-          addcity: function () {
-		    		let cityArr = get2LevelArea();
-		    		let idxArr=vmu.areaIndexArr;
-		    		let addname=[];
-		    		for (let j in cityArr) {
-		    			let curValue = cityArr[j].value + '';
-		    			if (idxArr.indexOf(curValue) < 0) {//选择了子节点
-		    				cityArr[j].checkAll = false;
-		    				for (let k in cityArr[j].children) {
-		    					let curChildValue = cityArr[j].children[k].value + '';
-		    					if (idxArr.indexOf(curChildValue) >= 0&&!cityArr[j].checkAll) {
-			                    	addname.push(cityArr[j].children[k].label);
-		    					}
-		    				}
-		                } else {//选择了父节点
-		                	cityArr[j].checkAll = true;
-		                    if (cityArr[j].children.length==1){
-		                    	addname.push(cityArr[j].children[0].label);
-		                    } else {
-		                    	addname.push(cityArr[j].label);
-		                    }
-		                }
-		    		}
-		    		this.namestr=addname.join(",");
-          },
-          receive:function(data){
-		    		this.areaIndexArr = data.index;
-		    		this.areaNameArr = data.name;
-		    	}
+        receive: function (data) {
+          this.areaIndexArr = data.index;
+          this.areaNameArr = data.name;
         }
+      }
     });
-    </script>
-  </body>
+  </script>
+</body>
+
 </html>

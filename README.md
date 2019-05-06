@@ -5,8 +5,8 @@
 请参考example.html文件内容。
 
 截图
-![image](https://github.com/max929/area-city-multi/blob/master/ScreenShot/001.jpg）
-![image](https://github.com/max929/area-city-multi/blob/master/ScreenShot/002.jpg）
+![image](https://github.com/max929/area-city-multi/blob/master/ScreenShot/001.jpg)
+![image](https://github.com/max929/area-city-multi/blob/master/ScreenShot/002.jpg)
 
 LICENSE
 

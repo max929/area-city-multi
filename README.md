@@ -11,6 +11,9 @@
 ![image](https://github.com/max929/area-city-multi/blob/master/ScreenShot/001.jpg)
 ![image](https://github.com/max929/area-city-multi/blob/master/ScreenShot/002.jpg)
 
+> ## Thanks to
+> * [http-vue-loader](https://github.com/FranckFreiburger/http-vue-loader)
+
 LICENSE
 
 [![LICENSE](https://img.shields.io/badge/license-Anti%20996-blue.svg)](https://github.com/996icu/996.ICU/blob/master/LICENSE)

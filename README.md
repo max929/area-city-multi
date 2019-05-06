@@ -1,6 +1,9 @@
 # area-city-multi
 这是一个基于iView，使用页面脚本引入式的二级多选组件。已更新中国地区城市数据，可直接用于电商的快递配送设置。
 
+> ## 来自
+> * [构建自己的电商平台(三)](https://maxuan.com/content/blogentries/be_00012.html)
+
 ## 使用方法
 请参考example.html文件内容。
 
